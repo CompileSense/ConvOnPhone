@@ -28,6 +28,7 @@ add_library( # Sets the name of the library.
 
 # Specifies a path to native header files.
 include_directories(./src/main/cpp/openblas/arm64-v8ainclude)
+include_directories(/Users/shenjingyuan002/work/opencl/include)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because system libraries are included in the search path by
@@ -53,4 +54,5 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib}
                        /Users/shenjingyuan002/Documents/AndroidStudioProjects/android-ndk/ConvOnPhone/app/src/main/JniLibs/libopenblas_armv8-r0.2.20.dev.a
+                       /Users/shenjingyuan002/work/opencl/lib64/libOpenCL.so
                        )

@@ -5,6 +5,7 @@
 #include <time.h>
 #include "Convolution.h"
 #include "cblas.h"
+#include "OpenCL.h"
 
 #define LOG_TAG "COP_Native"
 #define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__))
@@ -40,9 +41,25 @@ void cblastest()
 
 }
 
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+JNIEXPORT void JNICALL
+Java_com_compilesense_liuyi_convonphone_MainActivity_shutdownOpenCL(JNIEnv *env, jobject instance) {
+
+    shutdownOpenCL();
+    LOGD("shutdownOpenCL(openCLObjects) was called");
+}
+
+JNIEXPORT void JNICALL
+Java_com_compilesense_liuyi_convonphone_MainActivity_intiOpenCL(JNIEnv *env, jobject instance,
+                                                                jstring openCLProgramText_) {
+    initOpenCL(env, openCLProgramText_);
+}
+
 jstring
 Java_com_compilesense_liuyi_convonphone_MainActivity_convTest(
         JNIEnv *env,
@@ -100,13 +117,23 @@ Java_com_compilesense_liuyi_convonphone_MainActivity_blasTest(
     LOGD("src init time: %lf", now_ms() - st);
 
     st = now_ms();
+    const int im2col_dst_h = (SRC_H - MASK_H +1)*(SRC_W - MASK_W + 1);
+    const int im2col_dst_w = MASK_H * MASK_H;
+    float  srcColData[100][im2col_dst_h][im2col_dst_w];
+    im2col((int *) srcDate, SRC_H, SRC_W, 100, MASK_W, (float *) srcColData);
+    LOGD("im2col time: %lf", now_ms() - st);
+
+    st = now_ms();
     int index = 0;
-    int dst[1000][DST_H * DST_W];
+    float dst[1000][DST_H * DST_W];
     for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < 100; ++j) {
-            blasConv((int *) srcDate[j], SRC_H, SRC_W,
-                     (float *) masks[i], MASK_H, MASK_W,
-                     (float *) dst[index]);
+//            blasConv((int *) srcDate[j], SRC_H, SRC_W,
+//                     (float *) masks[i], MASK_H, MASK_W,
+//                     (float *) dst[index]);
+            blasConvColData((float *) srcColData[j], im2col_dst_h, im2col_dst_w,
+                            masks[i], MASK_H, MASK_W,
+                            dst[index]);
             index++;
         }
     }

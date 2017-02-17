@@ -9,6 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.compilesense.liuyi.convonphone.MainActivity">
+
     <Button
         android:id="@+id/bt_conv_java"
         android:text="Conv in Java"
@@ -29,4 +30,11 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/bt_openCL_init"
+        android:text="init OpenCL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/bt_conv_java"/>
 </RelativeLayout>

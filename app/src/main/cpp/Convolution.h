@@ -17,6 +17,7 @@ void getRandomSrcData (int data[SRC_H][SRC_W]);
 void getRandomSrcData (float data[SRC_H*SRC_W]);
 void getRandomMask(int mask[MASK_H][MASK_H]);
 void getRandomMask(float mask[MASK_H*MASK_H]);
+
 void blasConv(int** matSrc, int srcH, int srcW,
               int** matMask, int maskH, int maskW,
               int** matDst);
@@ -24,6 +25,12 @@ void blasConv(int** matSrc, int srcH, int srcW,
 void blasConv(int* matSrc, int srcH, int srcW,
               float* matMask, int maskH, int maskW,
               float* matDst);
+
+void blasConvColData(float * matColSrc, int colSrcH, int colSrcW,
+                     float* matMask, int maskH, int maskW,
+                     float * matDst);
+
+void im2col (int* input, int i_h, int i_w, int i_elevation, int maskSize, float *result);
 
 void blasTestS();
 

@@ -181,6 +181,35 @@ void im2col (int* input, int i_h, int i_w, int maskSize, float *result){
     }
 }
 
+//批量转换
+void im2col (int* input, int i_h, int i_w, int i_elevation, int maskSize, float *result){
+    int dst_h = (i_h - maskSize +1)*(i_w - maskSize + 1);
+    int dst_w = maskSize*maskSize;
+    int srcFrameSize = i_h * i_w;
+    int dstFrameSize = dst_h * dst_w;
+
+    for (int i = 0; i < dst_h; ++i){
+        int indexX = 0;
+        int indexY = 0;
+
+        for (int j = 0; j < dst_w; ++j) {
+            if (j%maskSize == 0 && j != 0){
+                ++indexY;
+                indexX = 0;
+            }
+            int offSetX = i%maskSize;
+            int offSetY = i/maskSize;
+
+            for (int elevation = 0; elevation < i_elevation; ++elevation) {
+                int inputI = input[(indexY + offSetY)*i_w + (indexX + offSetX) + elevation * srcFrameSize];
+                result[i*dst_w + j + elevation * dstFrameSize] = inputI;
+            }
+
+            ++indexX;
+        }
+    }
+}
+
 
 
 void blasConv(int** matSrc, int srcH, int srcW,
@@ -262,8 +291,32 @@ void blasConv(int* matSrc, int srcH, int srcW,
     const int ldc=N;//C的列
 
     cblas_sgemm(Order, TransA, TransB, M, N, K, alpha, inData, lda, matMask, ldb, beta, matDst, ldc);
-
 }
+
+void blasConvColData(float * matColSrc, int colSrcH, int colSrcW,
+              float* matMask, int maskH, int maskW,
+              float * matDst){
+
+//    int im2col_dst_h = (srcH - maskH +1)*(srcW - maskW + 1);
+//    int im2col_dst_w = maskH * maskW;
+//    float inData [im2col_dst_h * im2col_dst_w];
+//    im2col(matSrc, srcH, srcW, maskH, inData);
+
+    const enum CBLAS_ORDER Order=CblasRowMajor;
+    const enum CBLAS_TRANSPOSE TransA=CblasNoTrans;
+    const enum CBLAS_TRANSPOSE TransB=CblasNoTrans;
+    const int M=colSrcH;//A的行数，C的行数
+    const int N=1;//B的列数，C的列数
+    const int K=colSrcW;//A的列数，B的行数
+    const float alpha=1;
+    const float beta=0;
+    const int lda=K;//A的列
+    const int ldb=N;//B的列
+    const int ldc=N;//C的列
+    cblas_sgemm(Order, TransA, TransB, M, N, K, alpha, matColSrc, lda, matMask, ldb, beta, matDst, ldc);
+}
+
+
 
 void blasTestS(){
 

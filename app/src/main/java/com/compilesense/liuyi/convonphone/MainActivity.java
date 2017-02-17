@@ -10,6 +10,11 @@ import com.compilesense.liuyi.convonphone.algorithm.Convolution;
 import com.compilesense.liuyi.convonphone.algorithm.Mask;
 import com.compilesense.liuyi.convonphone.algorithm.MockImage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     // Used to load the 'native-lib' library on application startup.
@@ -39,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 blasTest();
+            }
+        });
+
+        findViewById(R.id.bt_openCL_init).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intiOpenCL(getOpenCLProgram());
             }
         });
 
@@ -89,6 +101,54 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"conv result[0][0]:" + result[0][0]);
     }
 
+    private String getOpenCLProgram ()
+    {
+        /* OpenCL program text is stored in a separate file in
+         * assets directory. Here you need to load it as a single
+         * string.
+         *
+         * In fact, the program may be directly built into
+         * native source code where OpenCL API is used,
+         * it is useful for short kernels (few lines) because it doesn't
+         * involve loading code and you don't need to pass it from Java to
+         * native side.
+         */
+
+        try
+        {
+            StringBuilder buffer = new StringBuilder();
+            InputStream stream = getAssets().open("step.cl");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            String s;
+
+            while((s = reader.readLine()) != null)
+            {
+                buffer.append(s);
+                buffer.append("\n");
+            }
+
+            reader.close();
+            return buffer.toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        shutdownOpenCL();
+    }
+
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
@@ -96,4 +156,8 @@ public class MainActivity extends AppCompatActivity {
     public native String convTest();
 
     public native String blasTest();
+
+    public native void intiOpenCL(String openCLProgramText);
+
+    public native void shutdownOpenCL();
 }
