@@ -18,6 +18,16 @@
  * @param openCLProgramText 内核程序
  */
 void initOpenCL(JNIEnv * env,  jstring openCLProgramText);
-void shutdownOpenCL();//关闭OpenCL
+void shutdownOpenCL();//关闭 OpenCL
+
+void dot(float* colMat, const int colMatSize,
+         float* maskMat, const int maskMatSize,
+         float* dstMat);
+
+void testOpenCLConv(float * srcColMat, unsigned int numSrcMat, unsigned int srcH, unsigned int srcW,
+                    float * maskMat, unsigned int numMask, unsigned int maskSize,
+                    float * dstMat, unsigned int dstH, unsigned int dstW);//测试 OpenCL 卷积内核函数
+
+void vectorAdd(int* v1, int* v2, int* result, unsigned int size);
 
 #endif //CONVONPHONE_OPENCL_H

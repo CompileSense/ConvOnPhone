@@ -54,5 +54,5 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib}
                        /Users/shenjingyuan002/Documents/AndroidStudioProjects/android-ndk/ConvOnPhone/app/src/main/JniLibs/libopenblas_armv8-r0.2.20.dev.a
-                       /Users/shenjingyuan002/work/opencl/lib64/libOpenCL.so
+                       /Users/shenjingyuan002/work/opencl/lib64/oneplus/libOpenCL.so
                        )

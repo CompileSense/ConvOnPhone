@@ -21,7 +21,7 @@ public class Mask {
 
     public Mask(int type){
         if (type == TYPE_TEST){
-            mask = new double[][]{{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
+            mask = new double[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         }
 
         if (type == TYPE_LAPLACIAN){

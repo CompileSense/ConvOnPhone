@@ -9,9 +9,6 @@ public class Convolution {
     public int[] conv(double[][] mask, MockImage src) {
         int mh = mask.length;
         int mw = mask[1].length;
-//        int sh = (mh+1)/2;
-//        int sw = (mw+1)/2;
-//        double maskSum = math.sum(mask);
         int dst_h = src.h - mh +1;
         int dst_w = src.w - mw +1;
 
@@ -20,21 +17,12 @@ public class Convolution {
 
         for(int i = 0; i < dst_h;i++){
             for(int j = 0;j < dst_w;j++){
-
                 int s = 0;
                 for(int m=0; m<mh ; m++){
                     for(int n=0;n<mw;n++){
                         s = s + (int)(mask[m][n]*src_data[m+i][n+j]);
                     }
                 }
-
-//                if(maskSum != 0)
-//                    s /= maskSum;
-
-//                if(s < 0)
-//                    s =0;
-//                if(s > 255)
-//                    s = 255;
                 d[i * dst_w + j] = s;
             }
         }

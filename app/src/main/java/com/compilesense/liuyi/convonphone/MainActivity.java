@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.compilesense.liuyi.convonphone.algorithm.Convolution;
 import com.compilesense.liuyi.convonphone.algorithm.Mask;
@@ -34,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
 //                testConv();
             }
         });
+
+        findViewById(R.id.bt_conv_native_neon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                convTestNeon();
+            }
+        });
         findViewById(R.id.bt_conv_java).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intiOpenCL(getOpenCLProgram());
+            }
+        });
+
+        findViewById(R.id.bt_openCL_conv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testOpenCLConv();
             }
         });
 
@@ -99,6 +112,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"conv result.length:" + result.length);
         Log.d(TAG,"conv result[0].length:" + result[0].length);
         Log.d(TAG,"conv result[0][0]:" + result[0][0]);
+
+
+//        Convolution convolution = new Convolution();
+//        Mask mask = new Mask(Mask.TYPE_TEST);
+//        MockImage image = new MockImage(true);
+//        int[] result = new int[9];
+//        result = convolution.conv(mask.getMask(), image);
+//        for (int i = 0; i < 9; ++i) {
+//            Log.d(TAG,"result:"+result[i]);
+//
+//        }
+
     }
 
     private String getOpenCLProgram ()
@@ -117,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         try
         {
             StringBuilder buffer = new StringBuilder();
-            InputStream stream = getAssets().open("step.cl");
+            InputStream stream = getAssets().open("convolution.cl");
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             String s;
 
@@ -135,6 +160,29 @@ public class MainActivity extends AppCompatActivity {
         }
         return "";
 
+    }
+
+    private String getOpenCLHeader(){
+        try
+        {
+            StringBuilder buffer = new StringBuilder();
+            InputStream stream = getAssets().open("header.h");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            String s;
+
+            while((s = reader.readLine()) != null)
+            {
+                buffer.append(s);
+                buffer.append("\n");
+            }
+
+            reader.close();
+            return buffer.toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
@@ -155,9 +203,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public native String convTest();
 
+    public native void convTestNeon();
+
     public native String blasTest();
 
     public native void intiOpenCL(String openCLProgramText);
 
+    public native void intiOpenCL2(String openCLProgramText, String openCLHeaderText);
+
     public native void shutdownOpenCL();
+
+    native void testOpenCLConv();
 }

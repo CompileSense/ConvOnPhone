@@ -24,9 +24,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
+        android:id="@+id/bt_conv_native_neon"
+        android:text="Conv in Native with neon"
+        android:layout_below="@id/bt_conv_native"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
         android:id="@+id/bt_blas_test"
         android:text="test blas"
-        android:layout_below="@id/bt_conv_native"
+        android:layout_below="@id/bt_conv_native_neon"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -37,4 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/bt_conv_java"/>
+    <Button
+        android:id="@+id/bt_openCL_conv"
+        android:text="OpenCL conv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/bt_openCL_init"/>
 </RelativeLayout>
